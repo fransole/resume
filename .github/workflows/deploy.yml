@@ -20,7 +20,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: latest
+          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,10 +29,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
-
-      - name: Install Sharp with native binaries
-        run: pnpm add sharp --ignore-scripts=false
+        run: pnpm install
 
       - name: Build site
         run: pnpm run build
