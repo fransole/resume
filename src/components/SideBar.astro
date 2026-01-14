@@ -18,6 +18,150 @@ const { sideBarActiveItemID } = Astro.props;
       </a>
     </div>
     <SideBarMenu sideBarActiveItemID={sideBarActiveItemID} />
+    <div id="logo-playground"></div>
     <SideBarFooter />
   </aside>
 </div>
+
+<style>
+  #logo-playground {
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+    min-height: 120px;
+  }
+
+  #logo-playground :global(.logo-particle) {
+    position: absolute;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  #logo-playground :global(.logo-particle path) {
+    fill: #C0A36E;
+  }
+</style>
+
+<script>
+  function initLogoAnimation() {
+    const playground = document.getElementById('logo-playground');
+    if (!playground || playground.dataset.initialized) return;
+    playground.dataset.initialized = 'true';
+
+    const PARTICLE_COUNT = 18;
+    const particles: {
+      el: SVGSVGElement;
+      x: number;
+      y: number;
+      targetX: number;
+      targetY: number;
+      size: number;
+      opacity: number;
+      rotation: number;
+      ease: number;
+      orbitOffset: number;
+      orbitSpeed: number;
+    }[] = [];
+
+    // Simplified logo path
+    const logoPath = `M56.1,156c0-35.5,20.9-93.1,34.2-109.1c13-15.6,46.9-14.4,61.3,0c95,95,34.2,73.6,34.2,109.1
+      c0,35.5-29.1,64.3-64.8,64.3C85.2,220.3,56.1,191.5,56.1,156z M151.1,86.3c3.4,0,6.1,2.7,6.1,6.1s-2.7,6.1-6.1,6.1
+      s-6.1-2.7-6.1-6.1S147.7,86.3,151.1,86.3z M120.7,37.7c13.4,0,24.3,3.6,24.3,8.1s-10.9,8.1-24.3,8.1s-24.3-3.6-24.3-8.1
+      S107.3,37.7,120.7,37.7z`;
+
+    // Create particles
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const size = 12 + Math.random() * 16;
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 256 256');
+      svg.setAttribute('width', size.toString());
+      svg.setAttribute('height', size.toString());
+      svg.classList.add('logo-particle');
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', logoPath);
+      svg.appendChild(path);
+
+      const opacity = 0.2 + Math.random() * 0.5;
+      svg.style.opacity = opacity.toString();
+
+      playground.appendChild(svg);
+
+      const rect = playground.getBoundingClientRect();
+      particles.push({
+        el: svg,
+        x: Math.random() * rect.width,
+        y: Math.random() * rect.height,
+        targetX: Math.random() * rect.width,
+        targetY: Math.random() * rect.height,
+        size,
+        opacity,
+        rotation: Math.random() * 360,
+        ease: 0.02 + Math.random() * 0.06,
+        orbitOffset: Math.random() * Math.PI * 2,
+        orbitSpeed: 0.3 + Math.random() * 0.4
+      });
+    }
+
+    let mouseX = -1000;
+    let mouseY = -1000;
+    let isMouseOver = false;
+    let time = 0;
+
+    playground.addEventListener('mousemove', (e) => {
+      const rect = playground.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+      isMouseOver = true;
+
+      // Cascade targets with delay
+      particles.forEach((p, i) => {
+        setTimeout(() => {
+          p.targetX = mouseX + (Math.random() - 0.5) * 30;
+          p.targetY = mouseY + (Math.random() - 0.5) * 30;
+        }, i * 25);
+      });
+    });
+
+    playground.addEventListener('mouseleave', () => {
+      isMouseOver = false;
+    });
+
+    function animate() {
+      time += 0.016;
+      const rect = playground.getBoundingClientRect();
+
+      particles.forEach((p, i) => {
+        if (!isMouseOver) {
+          // Gentle orbital motion when idle
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const orbitRadius = 30 + (i % 5) * 15;
+          p.targetX = centerX + Math.sin(time * p.orbitSpeed + p.orbitOffset) * orbitRadius;
+          p.targetY = centerY + Math.cos(time * p.orbitSpeed * 0.7 + p.orbitOffset) * orbitRadius * 0.6;
+        }
+
+        // Smooth easing toward target
+        const dx = p.targetX - p.x;
+        const dy = p.targetY - p.y;
+        p.x += dx * p.ease;
+        p.y += dy * p.ease;
+
+        // Rotation based on velocity
+        const speed = Math.sqrt(dx * dx + dy * dy);
+        p.rotation += speed * 0.1;
+
+        // Apply transform
+        p.el.style.transform = `translate(${p.x - p.size/2}px, ${p.y - p.size/2}px) rotate(${p.rotation}deg)`;
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+
+  // Initialize on load and page transitions
+  initLogoAnimation();
+  document.addEventListener('astro:page-load', initLogoAnimation);
+</script>

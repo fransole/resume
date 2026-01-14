@@ -25,12 +25,9 @@ const images = Object.entries(imageModules).map(([path, module]) => {
 images.sort((a, b) => a.label.localeCompare(b.label));
 ---
 
-<BaseLayout title="Ceramics" sideBarActiveItemID="pottery">
+<BaseLayout title="Pottery" sideBarActiveItemID="pottery">
   <div class="mb-5 flex justify-between items-start">
-    <div>
-      <div class="text-xl py-1">Dorion Ceramics</div>
-      <div class="text-3xl w-full font-bold">Ceramics</div>
-    </div>
+    <div class="text-3xl w-full font-bold">Pottery</div>
     <button id="sidebar-toggle" class="btn btn-sm btn-ghost hidden lg:flex gap-2" title="Toggle sidebar">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
       <span class="toggle-text">Hide sidebar</span>
@@ -38,7 +35,7 @@ images.sort((a, b) => a.label.localeCompare(b.label));
   </div>
 
   <div class="mb-10 text-justify">
-    Belgian American potter inspired by nature, travel, and clean geometry. Currently exploring the intersection of electronics and ceramic forms.
+    I throw on the wheel and experiment with making my own glazes in my home studio. My favorite things to make are big vases and mugs. I'm drawn to nature-inspired textures - mosses, mushrooms, organic geometry - and I like building up lots of layers in both glaze and surface design. Lately I've been exploring ways to incorporate electronics into ceramic forms.
   </div>
 
   <div class="mb-6 flex gap-3">
@@ -46,9 +43,9 @@ images.sort((a, b) => a.label.localeCompare(b.label));
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
       Instagram
     </a>
-    <a class="btn btn-outline border-accent text-accent hover:bg-[#C0A36E] hover:border-[#C0A36E] hover:text-base-100 gap-2" href="https://etsy.com/shop/DorionCeramic" target="_blank">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8.559 3.89c0-.31.32-.521.659-.521 1.867 0 4.877.183 6.549.652.854.242 1.267.643 1.267 1.137v2.32c0 .622-.482 1.097-1.096 1.097-.616 0-1.092-.475-1.092-1.097v-.797c0-.313-.208-.517-.513-.517h-3.461c-.312 0-.544.158-.544.478v5.116h2.459c.62 0 1.092.475 1.092 1.097s-.473 1.096-1.092 1.096h-2.459v5.117c0 .32.232.479.544.479h3.461c.305 0 .513-.205.513-.518v-.797c0-.622.476-1.096 1.092-1.096.614 0 1.096.474 1.096 1.096v2.32c0 .494-.413.896-1.267 1.138-1.672.469-4.682.652-6.549.652-.339 0-.659-.211-.659-.521v-17.93z"/></svg>
-      Shop on Etsy
+    <a class="btn btn-outline border-accent text-accent hover:bg-accent hover:text-accent-content hover:border-accent transition-colors gap-2" href="https://etsy.com/shop/DorionCeramic" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Shop
     </a>
   </div>
 
@@ -56,9 +53,9 @@ images.sort((a, b) => a.label.localeCompare(b.label));
     {images.map((image, index) => (
       <article class="gallery-item">
         <a
-          href={image.src.src}
           data-fancybox="gallery"
           data-caption={image.label}
+          data-src={image.src.src}
         >
           <Image
             src={image.src}
@@ -69,8 +66,8 @@ images.sort((a, b) => a.label.localeCompare(b.label));
             quality={80}
             loading={index < 12 ? "eager" : "lazy"}
           />
-          <span class="label">{image.label}</span>
         </a>
+        <span class="label">{image.label}</span>
       </article>
     ))}
   </div>
@@ -90,23 +87,56 @@ images.sort((a, b) => a.label.localeCompare(b.label));
       Carousel: { transition: "slide" },
     });
 
-    // Sidebar toggle functionality
-    const toggleBtn = document.getElementById('sidebar-toggle');
-    const drawer = document.querySelector('.drawer');
-    const toggleText = toggleBtn?.querySelector('.toggle-text');
+    // Sidebar toggle functionality - use astro:page-load for View Transitions support
+    function initSidebarToggle() {
+      const toggleBtn = document.getElementById('sidebar-toggle');
+      const drawer = document.querySelector('.drawer');
+      const toggleText = toggleBtn?.querySelector('.toggle-text');
 
-    toggleBtn?.addEventListener('click', () => {
-      drawer?.classList.toggle('lg:drawer-open');
-      if (drawer?.classList.contains('lg:drawer-open')) {
-        if (toggleText) toggleText.textContent = 'Hide sidebar';
-      } else {
-        if (toggleText) toggleText.textContent = 'Show sidebar';
+      // Remove any existing listeners by cloning
+      if (toggleBtn) {
+        const newBtn = toggleBtn.cloneNode(true) as HTMLElement;
+        toggleBtn.parentNode?.replaceChild(newBtn, toggleBtn);
+
+        const newToggleText = newBtn.querySelector('.toggle-text');
+        newBtn.addEventListener('click', () => {
+          const isCollapsed = drawer?.classList.toggle('sidebar-collapsed');
+          if (newToggleText) {
+            newToggleText.textContent = isCollapsed ? 'Show sidebar' : 'Hide sidebar';
+          }
+        });
       }
-    });
+    }
+
+    // Run on initial load and after each navigation
+    initSidebarToggle();
+    document.addEventListener('astro:page-load', initSidebarToggle);
   </script>
 </BaseLayout>
 
 <style>
+  /* Sidebar toggle */
+  :global(.drawer.sidebar-collapsed) {
+    grid-template-columns: 0 1fr;
+  }
+
+  :global(.sidebar-collapsed .drawer-side) {
+    transform: translateX(-100%);
+    width: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  :global(.sidebar-collapsed .drawer-content) {
+    width: 100vw;
+    max-width: 100vw;
+  }
+
+  :global(.sidebar-collapsed main) {
+    max-width: 100%;
+    width: 100%;
+  }
+
   /* Photo Grid */
   .gallery {
     display: grid;
@@ -127,6 +157,7 @@ images.sort((a, b) => a.label.localeCompare(b.label));
     height: 100%;
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
   }
 
   .gallery-item img {
