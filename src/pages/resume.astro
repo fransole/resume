@@ -261,10 +261,18 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     transform-style: preserve-3d;
   }
 
-  /* Flip on hover (desktop) and when tapped/active (mobile) */
-  .flip-card:hover .flip-card-inner,
-  .flip-card.flipped .flip-card-inner {
-    transform: rotateY(180deg);
+  /* Desktop: flip on hover */
+  @media (min-width: 768px) {
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+  }
+
+  /* Mobile: flip when tapped (flipped class) */
+  @media (max-width: 767px) {
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
   }
 
   /* Demo flip animation for first card */
@@ -274,7 +282,7 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
   }
 
   .flip-card.demo-flip .flip-card-inner {
-    animation: demo-flip 3s ease-in-out;
+    animation: demo-flip 1.5s ease-in-out;
   }
 
   .flip-card-front,
@@ -342,7 +350,7 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
           // Remove demo class after animation completes
           setTimeout(() => {
             card.classList.remove('demo-flip');
-          }, 3000);
+          }, 1500); // Match animation duration
         }, 500); // Wait 500ms after page load to start demo
       }
     });
