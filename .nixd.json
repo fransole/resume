@@ -1,0 +1,8 @@
+{
+  "nixpkgs": {
+    "expr": "import (builtins.getFlake \"/home/john/Code/resume\").inputs.nixpkgs { }"
+  },
+  "formatting": {
+    "command": ["alejandra"]
+  }
+}
