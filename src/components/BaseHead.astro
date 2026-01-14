@@ -13,7 +13,30 @@ export interface Props {
 
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
-const { title, description, image = `${base}profile.webp`, ogType = 'website' } = Astro.props;
+
+// Generate OG image path from current URL
+const getOGImagePath = () => {
+	// Get pathname and normalize it
+	let pathname = Astro.url.pathname;
+
+	// Remove base path (handle both with and without trailing slash)
+	const baseWithoutSlash = base.replace(/\/$/, '');
+	if (pathname === baseWithoutSlash || pathname === base) {
+		pathname = '';
+	} else if (pathname.startsWith(base)) {
+		pathname = pathname.slice(base.length);
+	} else if (pathname.startsWith(baseWithoutSlash + '/')) {
+		pathname = pathname.slice(baseWithoutSlash.length + 1);
+	}
+
+	// Remove leading/trailing slashes
+	pathname = pathname.replace(/^\/|\/$/g, '');
+	// Default to 'index' for homepage
+	const route = pathname || 'index';
+	return `${base}og/${route}.png`;
+};
+
+const { title, description, image = getOGImagePath(), ogType = 'website' } = Astro.props;
 ---
 
 <!-- Global Metadata -->
