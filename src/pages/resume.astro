@@ -258,8 +258,18 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     transform-style: preserve-3d;
   }
 
-  .flip-card:hover .flip-card-inner {
-    transform: rotateY(180deg);
+  /* Desktop: flip on hover */
+  @media (min-width: 768px) {
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+  }
+
+  /* Mobile: flip when scrolled into view */
+  @media (max-width: 767px) {
+    .flip-card.in-view .flip-card-inner {
+      transform: rotateY(180deg);
+    }
   }
 
   .flip-card-front,
@@ -295,3 +305,27 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     }
   }
 </style>
+
+<script>
+  // Flip cards on scroll for mobile devices
+  if (window.innerWidth < 768) {
+    const flipCards = document.querySelectorAll('.flip-card');
+
+    const observerOptions = {
+      threshold: 0.5, // Trigger when 50% of the card is visible
+      rootMargin: '0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          // Optional: unobserve after flipping once
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    flipCards.forEach(card => observer.observe(card));
+  }
+</script>
