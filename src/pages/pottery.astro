@@ -57,14 +57,22 @@ const imageModules = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true }
 );
 
+// Import raw image URLs for lightbox (unprocessed)
+const rawImages = import.meta.glob<string>(
+  "../images/pottery/*.{jpeg,jpg,png,gif,webp}",
+  { eager: true, import: 'default', query: '?url' }
+);
+
 // Convert to array and extract label from filename
 const images = Object.entries(imageModules).map(([path, module]) => {
   const filename = path.split("/").pop() || "";
   const label = filename.replace(/\.(jpeg|jpg|png|gif|webp)$/i, "");
   const description = imageDescriptions[label] || `Handmade ceramic piece: ${label}`;
+  const rawPath = rawImages[path]; // Get unprocessed URL for lightbox
 
   return {
-    src: module.default,
+    src: module.default,    // ImageMetadata for optimized thumbnails
+    rawSrc: rawPath,        // String URL for lightbox (unprocessed)
     label,
     filename,
     description,
@@ -107,7 +115,7 @@ images.sort((a, b) => a.label.localeCompare(b.label));
     {images.map((image, index) => (
       <article class="gallery-item">
         <a
-          href={image.src.src}
+          href={image.rawSrc}
           data-fancybox="gallery"
           data-caption={image.label}
         >
