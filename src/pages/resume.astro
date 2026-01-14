@@ -3,13 +3,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import TimeLineElement from "../components/cv/TimeLine.astro";
 ---
 
-<BaseLayout title="Resume" sideBarActiveItemID="cv">
+<BaseLayout title="Resume" sideBarActiveItemID="resume">
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Profile</div>
+    <div class="text-3xl w-full font-bold">John Dorion</div>
   </div>
 
   <div class="mb-10 text-justify">
-    Sales Engineer specializing in enterprise infrastructure, cloud, and security solutions. Proven ability to translate complex technical concepts into strategic business outcomes. Background in cybersecurity operations with hands-on expertise in SIEMs (CrowdStrike, Splunk), Linux systems administration, and cloud platforms (AWS). Two-time CTF competition champion with deep practical security knowledge.
+    I'm a Consulting Engineer at Silex Data Solutions, helping clients make sense of complex infrastructure, cloud, and security solutions. Before this, I worked in cybersecurity operations where I got hands-on with SIEMs like CrowdStrike and Splunk. I also run a homelab where I've picked up most of my Linux, virtualization, and networking knowledge. When I'm not working, you might find me competing in CTF competitions or tinkering with my Proxmox cluster.
   </div>
 
   <!-- Key Achievements -->
@@ -27,16 +27,16 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     </div>
     <div class="card bg-base-200 shadow-xl">
       <div class="card-body items-center text-center p-4">
-        <div class="text-4xl mb-2">⭐</div>
-        <h3 class="card-title text-sm">Silex Data Solutions</h3>
-        <p class="text-primary font-bold">Employee of the Quarter</p>
+        <div class="text-4xl mb-2">📜</div>
+        <h3 class="card-title text-sm">Professional Credentials</h3>
+        <p class="text-primary font-bold">28+ Certifications</p>
       </div>
     </div>
     <div class="card bg-base-200 shadow-xl">
       <div class="card-body items-center text-center p-4">
-        <div class="text-4xl mb-2">📜</div>
-        <h3 class="card-title text-sm">Professional Credentials</h3>
-        <p class="text-primary font-bold">28+ Certifications</p>
+        <div class="text-4xl mb-2">🛡️</div>
+        <h3 class="card-title text-sm">Raymond James CTF</h3>
+        <p class="text-primary font-bold">Participant</p>
       </div>
     </div>
   </div>
@@ -45,18 +45,17 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     <div class="text-3xl w-full font-bold">Experience</div>
   </div>
 
-  <div class="time-line-container mb-10">
+  <div class="time-line-container mb-10 space-y-6">
     <TimeLineElement
       title="Associate Consulting Engineer"
       subtitle="Dec 2024 - Present at Silex Data Solutions, Memphis, TN"
+      accent={true}
     >
       <ul class="list-disc ml-4 space-y-1">
-        <li>Spearhead AWS practice development, serving as the primary technical and process resource for the sales organization</li>
         <li>Provide comprehensive pre-sales support across Tennessee, managing scoping, RFX responses, and technical solution design for two account executives</li>
-        <li>Recognized with Employee of the Quarter award within first year of employment</li>
+        <li>Spearhead AWS practice development, serving as the primary technical and process resource for the sales organization</li>
         <li>Rapidly acquired 28+ professional certifications across AWS, Red Hat, Splunk, and Cohesity platforms</li>
       </ul>
-      <p class="mt-2"><strong>Focus Areas:</strong> Red Hat Products, Linux, AI, Cybersecurity, Cloud (AWS)</p>
     </TimeLineElement>
 
     <TimeLineElement
@@ -94,19 +93,6 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     </TimeLineElement>
 
     <TimeLineElement
-      title="Homelab Administrator"
-      subtitle="2023 - Present | Personal Project"
-    >
-      <ul class="list-disc ml-4 space-y-1">
-        <li>Built multi-node Proxmox cluster hosting Linux containers and VMs</li>
-        <li>Configured OPNSense for secure dual-stack network with firewall, VLANs, and VPN</li>
-        <li>Implemented data recovery plan with NAS backup to Backblaze B2</li>
-        <li>Managed DNS, SSL certificates, and WAF via CloudFlare</li>
-        <li>Automated system updates across Linux hosts using Ansible</li>
-      </ul>
-    </TimeLineElement>
-
-    <TimeLineElement
       title="Studio Manager / Instructor"
       subtitle="Sep 2020 - Jan 2023 at Summer Ave. Art & Clay, Memphis, TN"
     >
@@ -116,6 +102,33 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
         <li>Developed Excel automation solutions to streamline ordering processes</li>
       </ul>
     </TimeLineElement>
+  </div>
+
+  <!-- Homelab Section -->
+  <div class="bg-base-300 rounded-lg p-6 mb-10">
+    <div class="text-2xl font-bold mb-4 flex items-center gap-2">
+      <span>🖥️</span> Homelab
+    </div>
+    <p class="mb-4">Self-directed infrastructure lab for hands-on learning and experimentation with enterprise technologies:</p>
+    <ul class="list-disc ml-6 space-y-1">
+      <li>Built multi-node Proxmox cluster hosting Linux containers and VMs</li>
+      <li>Configured OPNSense for secure dual-stack network with firewall, VLANs, and VPN</li>
+      <li>Implemented data recovery plan with NAS backup to Backblaze B2</li>
+      <li>Managed DNS, SSL certificates, and WAF via CloudFlare</li>
+      <li>Automated system updates across Linux hosts using Ansible</li>
+      <li>Created internal documentation and network diagrams for all hardware and server configurations</li>
+      <li>Running NixOS as my daily driver with Nix flakes for fully declarative and reproducible system configuration</li>
+      <li>Automated Nix flake updates and package version checks via GitHub Actions</li>
+      <li>Built custom Nix packages and configured CI/CD to publish a sanitized public version of my NixOS configs and dotfiles</li>
+    </ul>
+    <div class="mt-4">
+      <a href="https://github.com/fransole" target="_blank" class="btn btn-accent gap-2 hover:brightness-110 hover:scale-[1.02] transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+        View My Projects on GitHub
+      </a>
+    </div>
   </div>
 
   <div class="mb-5">
@@ -131,7 +144,7 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
       title="Bachelor of Business Administration - Business Information Technology"
       subtitle="2023 - 2024 at Fogelman College of Business & Economics, University of Memphis | GPA: 3.8"
     >
-      MILE Leadership Program
+      <p class="ml-4">Organization: MILE Leadership Program</p>
     </TimeLineElement>
     <TimeLineElement
       title="Associate of Science - Business Administration"
@@ -153,8 +166,8 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     <div>
       <h4 class="font-bold text-lg mb-2">Cloud</h4>
       <ul class="list-disc mx-6 grid gap-1">
-        <li><strong>AWS Certified Cloud Practitioner</strong> - Amazon Web Services</li>
-        <li><strong>AWS Solutions Architect Associate</strong> - In Progress (Scheduled)</li>
+        <li>AWS Certified Cloud Practitioner</li>
+        <li>AWS Solutions Architect Associate (In Progress)</li>
       </ul>
     </div>
     <div>
@@ -168,7 +181,7 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     <div>
       <h4 class="font-bold text-lg mb-2">Security & Data</h4>
       <ul class="list-disc mx-6 grid gap-1">
-        <li><strong>Splunk Accredited Security SE I</strong> (Partner)</li>
+        <li>Splunk Accredited Security SE I (Partner)</li>
         <li>Cohesity Data Cloud Technical Sales Associate</li>
       </ul>
     </div>
@@ -178,7 +191,7 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     <div class="text-3xl w-full font-bold">Skills</div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
     <div>
       <h4 class="font-bold mb-2">Security</h4>
       <p class="text-sm">CrowdStrike Falcon, Splunk Enterprise Security, SIEM, MITRE ATT&CK, CTF, SOC2, GRC</p>
@@ -186,10 +199,6 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     <div>
       <h4 class="font-bold mb-2">Cloud & Infrastructure</h4>
       <p class="text-sm">AWS, GCP, Red Hat Enterprise Linux, Proxmox, OPNSense, Ansible, Docker</p>
-    </div>
-    <div>
-      <h4 class="font-bold mb-2">Development</h4>
-      <p class="text-sm">Python, PowerShell, ML/AI, API Integration, Automation</p>
     </div>
     <div>
       <h4 class="font-bold mb-2">Networking</h4>

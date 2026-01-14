@@ -1,4 +1,5 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
@@ -31,301 +32,147 @@ images.sort((a, b) => {
 });
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dorion Ceramics - Pottery Gallery</title>
-    <meta name="description" content="Pottery by John Dorion - Belgian American potter" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<BaseLayout title="Pottery" sideBarActiveItemID="pottery">
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Dorion Ceramics</div>
+  </div>
 
-    <!-- Fancybox CSS imported via Astro -->
+  <div class="mb-10 text-justify">
+    I'm a Belgian American potter who draws inspiration from travels, elements of nature like mosses and mushrooms, and clean geometry. Currently researching the incorporation of electric elements into ceramic forms.
+  </div>
 
-    <!-- Inter font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <div class="mb-6 flex gap-4">
+    <a href="https://instagram.com/dorion_ceramics" target="_blank" class="link link-primary">Instagram</a>
+    <a href="https://etsy.com/shop/DorionCeramic" target="_blank" class="link link-primary">Etsy</a>
+  </div>
 
-    <style>
-      /* CSS Reset */
-      *, *::before, *::after { box-sizing: border-box; }
-      * { margin: 0; padding: 0; }
-
-      body {
-        min-height: 100vh;
-        font-family: "Inter", system-ui, -apple-system, sans-serif;
-        background-color: #1F1F28;
-        color: #DCD7BA;
-        line-height: 1.6;
-      }
-
-      img, picture, video, canvas, svg {
-        display: block;
-        max-width: 100%;
-        height: auto;
-      }
-
-      /* Back Button */
-      .back-button {
-        position: fixed;
-        top: 1.5rem;
-        left: 1.5rem;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.25rem;
-        background-color: #223249;
-        color: #DCD7BA;
-        text-decoration: none;
-        border-radius: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: background-color 0.2s ease, transform 0.2s ease;
-        border: 1px solid #54546D;
-      }
-
-      .back-button:hover {
-        background-color: #54546D;
-        transform: translateX(-2px);
-      }
-
-      .back-button svg {
-        width: 1.25rem;
-        height: 1.25rem;
-      }
-
-      /* Site Header */
-      .site-header {
-        padding: clamp(4rem, 8vw, 6rem) clamp(2rem, 5vw, 4rem) clamp(2rem, 5vw, 4rem);
-        text-align: center;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      .site-header h1 {
-        font-size: clamp(2.5rem, 6vw, 4rem);
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.02em;
-        color: #DCD7BA;
-      }
-
-      .site-header h2 {
-        font-size: clamp(1rem, 2vw, 1.25rem);
-        font-weight: 400;
-        color: #C8C093;
-        margin-bottom: 1.5rem;
-      }
-
-      .site-header .bio {
-        font-size: 1rem;
-        color: #C8C093;
-        max-width: 600px;
-        margin: 0 auto 1.5rem;
-      }
-
-      /* Social Links */
-      .social-links {
-        display: flex;
-        justify-content: center;
-        gap: 1.5rem;
-        list-style: none;
-      }
-
-      .social-links a {
-        color: #7E9CD8;
-        text-decoration: none;
-        font-size: 0.875rem;
-        transition: color 0.2s ease;
-      }
-
-      .social-links a:hover {
-        color: #DCD7BA;
-      }
-
-      /* Photo Grid */
-      .gallery {
-        display: flex;
-        flex-wrap: wrap;
-        gap: clamp(4px, 0.5vw, 8px);
-        padding: 0 clamp(4px, 0.5vw, 8px) clamp(4px, 0.5vw, 8px);
-      }
-
-      .gallery::after {
-        content: "";
-        flex-grow: 999999999;
-      }
-
-      .gallery-item {
-        position: relative;
-        flex-grow: calc(var(--width) * 1000 / var(--height));
-        flex-basis: calc(var(--width) * 200px / var(--height));
-        overflow: hidden;
-      }
-
-      .gallery-item a {
-        display: block;
-        text-decoration: none;
-        color: inherit;
-      }
-
-      .gallery-item img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        transition: transform 0.3s ease, filter 0.3s ease;
-      }
-
-      .gallery-item:hover img {
-        transform: scale(1.02);
-      }
-
-      .gallery-item .label {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 2rem 1rem 0.75rem;
-        background: linear-gradient(to top, rgba(31, 31, 40, 0.9) 0%, rgba(31, 31, 40, 0) 100%);
-        font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-        font-weight: 500;
-        color: #DCD7BA;
-        opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        pointer-events: none;
-      }
-
-      .gallery-item:hover .label,
-      .gallery-item:focus-within .label {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      @media (hover: none) {
-        .gallery-item .label {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .gallery-item a:focus { outline: none; }
-      .gallery-item a:focus-visible {
-        outline: 2px solid #7E9CD8;
-        outline-offset: 2px;
-      }
-
-      /* Footer */
-      .site-footer {
-        padding: 3rem;
-        text-align: center;
-        color: #54546D;
-        font-size: 0.875rem;
-      }
-
-      .site-footer a {
-        color: #7E9CD8;
-        text-decoration: none;
-      }
-
-      .site-footer a:hover {
-        color: #DCD7BA;
-      }
-
-      /* Fancybox customization */
-      .fancybox__container {
-        --fancybox-bg: rgba(31, 31, 40, 0.98);
-      }
-
-      .fancybox__toolbar {
-        --fancybox-color: #DCD7BA;
-      }
-
-      .fancybox__caption {
-        font-family: "Inter", system-ui, sans-serif;
-        font-size: 1rem;
-        padding: 1rem;
-        text-align: center;
-        color: #C8C093;
-      }
-    </style>
-  </head>
-  <body>
-    <a href="/" class="back-button">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-      </svg>
-      Back to Resume
-    </a>
-
-    <header class="site-header">
-      <h1>Dorion Ceramics</h1>
-      <h2>Pottery by John Dorion</h2>
-      <p class="bio">
-        John Dorion is a Belgian American potter who draws inspiration from his
-        travels, elements of nature such as mosses and mushrooms, and clean
-        geometry. John is currently researching the incorporation of electric
-        elements into ceramic forms.
-      </p>
-      <ul class="social-links">
-        <li>
-          <a href="https://instagram.com/dorion_ceramics" target="_blank" rel="noopener">Instagram</a>
-        </li>
-        <li>
-          <a href="https://etsy.com/shop/DorionCeramic" target="_blank" rel="noopener">Etsy</a>
-        </li>
-        <li>
-          <a href="mailto:john@johndorion.com">Email</a>
-        </li>
-      </ul>
-    </header>
-
-    <main class="gallery" id="gallery">
-      {images.map((image, index) => (
-        <article
-          class="gallery-item"
-          style={`--width: ${image.src.width}; --height: ${image.src.height}`}
+  <div class="gallery mb-10" id="gallery">
+    {images.map((image, index) => (
+      <article
+        class="gallery-item"
+        style={`--width: ${image.src.width}; --height: ${image.src.height}`}
+      >
+        <a
+          href={image.src.src}
+          data-fancybox="gallery"
+          data-caption={image.label}
         >
-          <a
-            href={image.src.src}
-            data-fancybox="gallery"
-            data-caption={image.label}
-          >
-            <Image
-              src={image.src}
-              alt={image.label}
-              width={image.src.width}
-              height={image.src.height}
-              format="webp"
-              quality={80}
-              loading={index < 12 ? "eager" : "lazy"}
-            />
-            <span class="label">{image.label}</span>
-          </a>
-        </article>
-      ))}
-    </main>
+          <Image
+            src={image.src}
+            alt={image.label}
+            width={image.src.width}
+            height={image.src.height}
+            format="webp"
+            quality={80}
+            loading={index < 12 ? "eager" : "lazy"}
+          />
+          <span class="label">{image.label}</span>
+        </a>
+      </article>
+    ))}
+  </div>
 
-    <footer class="site-footer">
-      <p>&copy; {new Date().getFullYear()} John Dorion. Powered by <a href="https://astro.build">Astro</a>.</p>
-    </footer>
-
-    <script>
-      import { Fancybox } from "@fancyapps/ui";
-      Fancybox.bind('[data-fancybox="gallery"]', {
-        Thumbs: false,
-        Toolbar: {
-          display: {
-            left: [],
-            middle: [],
-            right: ["close"],
-          },
+  <script>
+    import { Fancybox } from "@fancyapps/ui";
+    Fancybox.bind('[data-fancybox="gallery"]', {
+      Thumbs: false,
+      Toolbar: {
+        display: {
+          left: [],
+          middle: [],
+          right: ["close"],
         },
-        Images: { zoom: true },
-        Carousel: { transition: "slide" },
-      });
-    </script>
-  </body>
-</html>
+      },
+      Images: { zoom: true },
+      Carousel: { transition: "slide" },
+    });
+  </script>
+</BaseLayout>
+
+<style>
+  /* Photo Grid */
+  .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(4px, 0.5vw, 8px);
+  }
+
+  .gallery::after {
+    content: "";
+    flex-grow: 999999999;
+  }
+
+  .gallery-item {
+    position: relative;
+    flex-grow: calc(var(--width) * 1000 / var(--height));
+    flex-basis: calc(var(--width) * 200px / var(--height));
+    overflow: hidden;
+    border-radius: 0.5rem;
+  }
+
+  .gallery-item a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.02);
+  }
+
+  .gallery-item .label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem 1rem 0.75rem;
+    background: linear-gradient(to top, rgba(31, 31, 40, 0.9) 0%, rgba(31, 31, 40, 0) 100%);
+    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+
+  .gallery-item:hover .label,
+  .gallery-item:focus-within .label {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (hover: none) {
+    .gallery-item .label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .gallery-item a:focus { outline: none; }
+  .gallery-item a:focus-visible {
+    outline: 2px solid theme('colors.primary');
+    outline-offset: 2px;
+  }
+
+  /* Fancybox customization */
+  :global(.fancybox__container) {
+    --fancybox-bg: rgba(31, 31, 40, 0.98);
+  }
+
+  :global(.fancybox__toolbar) {
+    --fancybox-color: theme('colors.base-content');
+  }
+
+  :global(.fancybox__caption) {
+    font-size: 1rem;
+    padding: 1rem;
+    text-align: center;
+  }
+</style>

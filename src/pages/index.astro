@@ -10,19 +10,24 @@ const last_posts = posts.slice(0, 3);
 ---
 
 <BaseLayout sideBarActiveItemID="home">
-  <div class="pb-12 mt-5">
-    <div class="text-xl py-1">Hey there</div>
-    <div class="text-5xl font-bold">I'm John Dorion</div>
-    <div class="text-3xl py-3 font-bold">Consulting Engineer at Silex Data Solutions</div>
-    <div class="py-2">
-      <span class="text-lg">
-        I work at the intersection of emerging technology and enterprise enablement, translating complex infrastructure, cloud, and security solutions into strategic outcomes. With a background in cybersecurity operations and hands-on Linux expertise from running my homelab, I bridge cutting-edge tech and real-world value.
-      </span>
-    </div>
-    <div class="mt-8">
-      <a class="btn btn-primary" href="https://linkedin.com/in/johndorion" target="_blank">Let's connect!</a>
-      <a href="/cv" class="btn btn-outline ml-5">View my CV</a>
-    </div>
+  <div class="mb-5">
+    <div class="text-xl py-1">Hey there!</div>
+    <div class="text-3xl w-full font-bold">I'm John Dorion</div>
+  </div>
+
+  <div class="mb-10 text-justify">
+    I'm a Consulting Engineer who loves digging into infrastructure, cloud, and security challenges. My background is in cybersecurity operations, but these days I spend most of my time helping clients navigate complex technical solutions. Outside of work, I'm usually tinkering with my homelab, competing in CTF competitions, or experimenting with NixOS as my daily driver.
+  </div>
+
+  <div class="mb-10 flex gap-3">
+    <a class="btn btn-primary gap-2" href="https://linkedin.com/in/johndorion" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+      Let's connect!
+    </a>
+    <a href="/resume" class="btn btn-accent btn-outline hover:bg-accent hover:border-accent gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      View Resume
+    </a>
   </div>
 
   <div>
@@ -31,26 +36,26 @@ const last_posts = posts.slice(0, 3);
 
   <HorizontalCard
     title="Tech 901 CTF - 1st Place Winner (2024 & 2025)"
-    img="/post_img.webp"
+    img="/ctf-highlight.webp"
     desc="Two-time champion of Tech 901's annual Capture The Flag cybersecurity competition, demonstrating practical offensive and defensive security skills."
-    url="/cv"
+    url="/resume"
     badge="CTF"
   />
   <div class="divider my-0"></div>
   <HorizontalCard
-    title="AWS Certified Cloud Practitioner"
-    img="/post_img.webp"
-    desc="Building cloud expertise with AWS certifications. Currently pursuing AWS Solutions Architect Associate to deepen architectural knowledge."
+    title="28+ Professional Certifications"
+    img="/certs-highlight.webp"
+    desc="Earned certifications across AWS, Red Hat, Splunk, and Cohesity platforms in my first year as a Consulting Engineer."
     url="https://www.credly.com/users/john-dorion.c2a33719/badges"
-    badge="AWS"
+    badge="CERTS"
   />
   <div class="divider my-0"></div>
   <HorizontalCard
-    title="Employee of the Quarter - Silex Data Solutions"
-    img="/post_img.webp"
-    desc="Recognized for spearheading AWS practice development and rapidly acquiring 28+ professional certifications in first year of employment."
-    url="/cv"
-    badge="AWARD"
+    title="NixOS Homelab"
+    img="/nixos-highlight.webp"
+    desc="Running NixOS as my daily driver with fully declarative configuration, custom packages, and automated CI/CD for public dotfiles."
+    url="https://github.com/fransole"
+    badge="LINUX"
   />
 
   <div>
