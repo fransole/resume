@@ -5,6 +5,7 @@ import JsonLd from "../components/JsonLd.astro";
 import { getCollection } from "astro:content";
 import createSlug from "../lib/createSlug";
 
+const base = import.meta.env.BASE_URL;
 const posts = (await getCollection("blog")).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const last_posts = posts.slice(0, 3);
@@ -26,7 +27,7 @@ const last_posts = posts.slice(0, 3);
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
       Let's connect!
     </a>
-    <a href="/resume" class="btn btn-outline border-accent text-accent hover:bg-accent hover:text-accent-content hover:border-accent transition-colors gap-2">
+    <a href={`${base}resume`} class="btn btn-outline border-accent text-accent hover:bg-accent hover:text-accent-content hover:border-accent transition-colors gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
       View Resume
     </a>
@@ -38,15 +39,15 @@ const last_posts = posts.slice(0, 3);
 
   <HorizontalCard
     title="Tech 901 CTF - 1st Place Winner (2024 & 2025)"
-    img="/ctf-highlight.webp"
+    img={`${base}ctf-highlight.webp`}
     desc="Two-time champion of Tech 901's annual Capture The Flag cybersecurity competition, demonstrating practical offensive and defensive security skills."
-    url="/resume"
+    url={`${base}resume`}
     badge="CTF"
   />
   <div class="divider my-0"></div>
   <HorizontalCard
     title="28+ Professional Certifications"
-    img="/certs-highlight.webp"
+    img={`${base}certs-highlight.webp`}
     desc="Earned certifications across AWS, Red Hat, Splunk, and Cohesity platforms in my first year as a Consulting Engineer."
     url="https://www.credly.com/users/john-dorion.c2a33719/badges"
     badge="CERTS"
@@ -54,7 +55,7 @@ const last_posts = posts.slice(0, 3);
   <div class="divider my-0"></div>
   <HorizontalCard
     title="NixOS Homelab"
-    img="/nixos-highlight.webp"
+    img={`${base}nixos-highlight.webp`}
     desc="Running NixOS as my daily driver with fully declarative configuration, custom packages, and automated CI/CD for public dotfiles."
     url="https://github.com/fransole"
     badge="LINUX"
@@ -71,7 +72,7 @@ const last_posts = posts.slice(0, 3);
           title={post.data.title}
           img={post.data.heroImage}
           desc={post.data.description}
-          url={"/blog/" + createSlug(post.data.title, post.id)}
+          url={`${base}blog/${createSlug(post.data.title, post.id)}`}
           target="_self"
           badge={post.data.badge}
         />

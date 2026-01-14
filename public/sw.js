@@ -13,15 +13,18 @@ const MAX_CACHE_BYTES = 50 * 1024 * 1024; // 50MB total cache size
 const MAX_SINGLE_ASSET_BYTES = 5 * 1024 * 1024; // 5MB per asset
 const TRIM_DEBOUNCE_COUNT = 10; // Only trim every N cache writes
 
+// Base path for GitHub Pages deployment (update if deploying elsewhere)
+const BASE_PATH = '/resume';
+
 // Assets to cache immediately on install
 const PRECACHE_ASSETS = [
-  '/',
-  '/resume/',
-  '/pottery/',
-  '/blog/',
-  '/404.html',
-  '/favicon.svg',
-  '/social_img.webp'
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/resume/`,
+  `${BASE_PATH}/pottery/`,
+  `${BASE_PATH}/blog/`,
+  `${BASE_PATH}/404.html`,
+  `${BASE_PATH}/favicon.svg`,
+  `${BASE_PATH}/social_img.webp`
 ];
 
 // Track cache writes for debouncing
@@ -181,7 +184,7 @@ self.addEventListener('fetch', (event) => {
         .catch(() => {
           // Return cached version or offline page
           return caches.match(request).then((cached) => {
-            return cached || caches.match('/404.html');
+            return cached || caches.match(`${BASE_PATH}/404.html`);
           });
         })
     );
