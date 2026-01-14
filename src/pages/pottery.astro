@@ -196,8 +196,9 @@ images.sort((a, b) => a.label.localeCompare(b.label));
           const { Fancybox } = await import("@fancyapps/ui");
           FancyboxModule = Fancybox;
 
-          // Bind to gallery elements
-          Fancybox.bind('[data-fancybox="gallery"]', {
+          // Set default options for Fancybox
+          Fancybox.defaults = {
+            ...Fancybox.defaults,
             Thumbs: false,
             Toolbar: {
               display: {
@@ -213,7 +214,7 @@ images.sort((a, b) => a.label.localeCompare(b.label));
                 applySidebarState(getSidebarCollapsed());
               }
             }
-          });
+          };
         } catch (err) {
           console.warn('Failed to load Fancybox:', err);
           fancyboxLoadPromise = null; // Reset so user can retry
@@ -236,14 +237,22 @@ images.sort((a, b) => a.label.localeCompare(b.label));
         const link = target.closest('[data-fancybox="gallery"]');
         if (!link) return;
 
-        // If Fancybox not loaded yet, load it and then trigger the click
+        // Always prevent default link navigation
+        e.preventDefault();
+
+        // If Fancybox not loaded yet, load it first
         if (!fancyboxLoadPromise) {
-          e.preventDefault();
           await loadFancybox();
-          // Re-trigger the click after loading (if Fancybox loaded successfully and element still in DOM)
-          if (FancyboxModule && link instanceof HTMLElement && document.contains(link)) {
-            link.click();
-          }
+        }
+
+        // Open Fancybox manually with the clicked image
+        if (FancyboxModule) {
+          const images = Array.from(document.querySelectorAll('[data-fancybox="gallery"]'));
+          const index = images.indexOf(link);
+          FancyboxModule.show(images.map(el => ({
+            src: el.getAttribute('href') || '',
+            caption: el.getAttribute('data-caption') || ''
+          })), { startIndex: index });
         }
       }, { signal: galleryAbortController.signal });
     }
