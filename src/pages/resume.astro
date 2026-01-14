@@ -261,18 +261,20 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     transform-style: preserve-3d;
   }
 
-  /* Desktop: flip on hover */
-  @media (min-width: 768px) {
-    .flip-card:hover .flip-card-inner {
-      transform: rotateY(180deg);
-    }
+  /* Flip on hover (desktop) and when tapped/active (mobile) */
+  .flip-card:hover .flip-card-inner,
+  .flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
   }
 
-  /* Mobile: flip when scrolled into view */
-  @media (max-width: 767px) {
-    .flip-card.in-view .flip-card-inner {
-      transform: rotateY(180deg);
-    }
+  /* Demo flip animation for first card */
+  @keyframes demo-flip {
+    0%, 100% { transform: rotateY(0deg); }
+    25%, 75% { transform: rotateY(180deg); }
+  }
+
+  .flip-card.demo-flip .flip-card-inner {
+    animation: demo-flip 3s ease-in-out;
   }
 
   .flip-card-front,
@@ -311,36 +313,39 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
 
 <script>
   function initFlipCards() {
-    // Only run on mobile
-    if (window.innerWidth >= 768) return;
-
     const flipCards = document.querySelectorAll('.flip-card');
 
-    // Remove any existing 'in-view' classes first
-    flipCards.forEach(card => card.classList.remove('in-view'));
+    // Add click/tap toggle for mobile devices
+    flipCards.forEach(card => {
+      // Remove any existing listeners
+      const newCard = card.cloneNode(true);
+      card.parentNode?.replaceChild(newCard, card);
+    });
 
-    const observerOptions = {
-      threshold: 0.6, // Trigger when 60% of the card is visible
-      rootMargin: '-50px 0px' // Only trigger when card is well into viewport
-    };
+    // Re-query after replacing nodes
+    const cards = document.querySelectorAll('.flip-card');
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Add a small stagger based on card position
-          const cards = Array.from(flipCards);
-          const index = cards.indexOf(entry.target);
-          setTimeout(() => {
-            entry.target.classList.add('in-view');
-          }, index * 150); // 150ms delay between each card
-        } else {
-          // Remove the class when card leaves viewport
-          entry.target.classList.remove('in-view');
+    cards.forEach((card, index) => {
+      // Add tap/click toggle for touch devices
+      card.addEventListener('click', (e) => {
+        // Only toggle on mobile or if not hovering
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          card.classList.toggle('flipped');
         }
       });
-    }, observerOptions);
 
-    flipCards.forEach(card => observer.observe(card));
+      // Demo flip on first card on page load
+      if (index === 0) {
+        setTimeout(() => {
+          card.classList.add('demo-flip');
+          // Remove demo class after animation completes
+          setTimeout(() => {
+            card.classList.remove('demo-flip');
+          }, 3000);
+        }, 500); // Wait 500ms after page load to start demo
+      }
+    });
   }
 
   // Run on initial page load
