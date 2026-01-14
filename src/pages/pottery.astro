@@ -75,7 +75,11 @@ const images = Object.entries(imageModules).map(([path, module]) => {
 images.sort((a, b) => a.label.localeCompare(b.label));
 ---
 
-<BaseLayout title="Pottery" description="Handmade ceramic pottery by John Dorion - wheel-thrown bowls, mugs, vases, and functional art pieces." showCCLicense={true}>
+<BaseLayout
+  title="Handmade Ceramic Pottery by John Dorion"
+  description="Wheel-thrown ceramic art including bowls, mugs, vases, and functional pottery pieces. Explore my handcrafted ceramics featuring unique glazes and traditional techniques."
+  showCCLicense={true}
+>
   <div class="mb-5 flex justify-between items-start">
     <h1 class="text-3xl w-full font-bold">Pottery</h1>
     <button id="sidebar-toggle" class="btn btn-sm btn-ghost hidden lg:flex gap-2" title="Toggle sidebar" aria-expanded="true">

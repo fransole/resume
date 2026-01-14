@@ -5,20 +5,20 @@ import createSlug from '../../lib/createSlug';
 // Define static pages
 const staticPages = {
   'index': {
-    title: 'John Dorion',
-    description: 'Consulting Engineer | CTF Champion | Homelab Enthusiast'
+    title: 'John Dorion - Consulting Engineer & Cybersecurity Enthusiast',
+    description: 'Cloud infrastructure specialist, two-time CTF champion, and homelab builder'
   },
   'resume': {
-    title: 'Resume',
-    description: 'John Dorion - Consulting Engineer at Silex Data Solutions'
+    title: 'Professional Resume & Experience',
+    description: '28+ certifications in AWS, Red Hat, Splunk | Consulting Engineer at Silex Data Solutions'
   },
   'pottery': {
-    title: 'Pottery Gallery',
-    description: 'Ceramic works and pottery projects by John Dorion'
+    title: 'Handmade Ceramic Pottery',
+    description: 'Wheel-thrown bowls, mugs, vases, and functional art pieces'
   },
   'blog': {
-    title: 'Blog',
-    description: 'Technical writing about NixOS, homelab, CTF, and cybersecurity'
+    title: 'Technical Blog',
+    description: 'Writing about NixOS, homelab infrastructure, CTF competitions, and cybersecurity'
   }
 };
 
