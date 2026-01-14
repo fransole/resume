@@ -10,6 +10,8 @@
 </ul>
 
 <script>
+const MENU_LISTENER_KEY = '__menuListenerAttached';
+
 function updateActiveMenuItem() {
   const activeClass = 'bg-base-300';
 
@@ -31,7 +33,12 @@ function updateActiveMenuItem() {
   activeItemElem && activeItemElem.classList.add(activeClass);
 }
 
-// Run on initial load and after View Transitions navigation
+// Run on initial load
 updateActiveMenuItem();
-document.addEventListener('astro:page-load', updateActiveMenuItem);
+
+// Add listener only once to prevent accumulation
+if (!(window as any)[MENU_LISTENER_KEY]) {
+  (window as any)[MENU_LISTENER_KEY] = true;
+  document.addEventListener('astro:page-load', updateActiveMenuItem);
+}
 </script>

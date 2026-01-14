@@ -3,15 +3,19 @@ import { type BlogSchema } from "../content.config";
 import BaseLayout from "./BaseLayout.astro";
 import JsonLd from "../components/JsonLd.astro";
 import { Image } from "astro:assets";
-import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
 
 export interface Props extends BlogSchema {}
 
 const { title, description, pubDate, updatedDate, heroImage, badge, tags = [] } = Astro.props;
-dayjs.extend(localizedFormat);
-const displayDate = dayjs(pubDate).format("ll");
-const displayUpdatedDate = updatedDate ? dayjs(updatedDate).format("ll") : null;
+
+// Format dates using native Intl.DateTimeFormat (zero bundle cost)
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric'
+});
+const displayDate = dateFormatter.format(pubDate);
+const displayUpdatedDate = updatedDate ? dateFormatter.format(updatedDate) : null;
 
 const articleData = {
   headline: title,

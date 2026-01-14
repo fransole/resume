@@ -3,8 +3,15 @@
  * Provides offline caching for static assets
  */
 
+// Increment version on each deployment to bust cache
 const CACHE_VERSION = 'v1';
 const CACHE_NAME = `portfolio-${CACHE_VERSION}`;
+
+// Cache size limits
+const MAX_CACHE_ITEMS = 50;
+const MAX_CACHE_BYTES = 50 * 1024 * 1024; // 50MB total cache size
+const MAX_SINGLE_ASSET_BYTES = 5 * 1024 * 1024; // 5MB per asset
+const TRIM_DEBOUNCE_COUNT = 10; // Only trim every N cache writes
 
 // Assets to cache immediately on install
 const PRECACHE_ASSETS = [
@@ -17,6 +24,98 @@ const PRECACHE_ASSETS = [
   '/social_img.webp'
 ];
 
+// Track cache writes for debouncing
+let cacheWriteCount = 0;
+
+/**
+ * Estimate response size from Content-Length header or blob
+ */
+async function getResponseSize(response) {
+  const contentLength = response.headers.get('content-length');
+  if (contentLength) {
+    return parseInt(contentLength, 10);
+  }
+  // Fallback: clone and check blob size
+  try {
+    const clone = response.clone();
+    const blob = await clone.blob();
+    return blob.size;
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * Calculate total cache size in bytes
+ */
+async function getCacheSize(cacheName) {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+  let totalSize = 0;
+
+  for (const request of keys) {
+    const response = await cache.match(request);
+    if (response) {
+      totalSize += await getResponseSize(response);
+    }
+  }
+
+  return totalSize;
+}
+
+/**
+ * Trim cache when over limits
+ * Uses FIFO eviction (oldest entries removed first)
+ */
+async function trimCache(cacheName) {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+
+  // Check item count limit
+  if (keys.length > MAX_CACHE_ITEMS) {
+    const toDelete = keys.length - MAX_CACHE_ITEMS;
+    await Promise.all(keys.slice(0, toDelete).map((key) => cache.delete(key)));
+    return;
+  }
+
+  // Check byte size limit
+  const totalSize = await getCacheSize(cacheName);
+  if (totalSize > MAX_CACHE_BYTES) {
+    // Remove oldest entries until under limit
+    let currentSize = totalSize;
+    for (const request of keys) {
+      if (currentSize <= MAX_CACHE_BYTES * 0.8) break; // Target 80% of limit
+      const response = await cache.match(request);
+      if (response) {
+        const size = await getResponseSize(response);
+        await cache.delete(request);
+        currentSize -= size;
+      }
+    }
+  }
+}
+
+/**
+ * Add response to cache with size and debounced trimming
+ */
+async function cacheWithLimit(request, response) {
+  // Skip caching oversized assets
+  const size = await getResponseSize(response.clone());
+  if (size > MAX_SINGLE_ASSET_BYTES) {
+    return;
+  }
+
+  const cache = await caches.open(CACHE_NAME);
+  await cache.put(request, response);
+
+  // Debounce trim - only run every N writes
+  cacheWriteCount++;
+  if (cacheWriteCount >= TRIM_DEBOUNCE_COUNT) {
+    cacheWriteCount = 0;
+    trimCache(CACHE_NAME);
+  }
+}
+
 // Install event - cache core assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -28,16 +127,20 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate event - clean up old caches
+// Activate event - clean up old caches and trim current
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
+    (async () => {
+      // Clean up old cache versions
+      const cacheNames = await caches.keys();
+      await Promise.all(
         cacheNames
           .filter((name) => name.startsWith('portfolio-') && name !== CACHE_NAME)
           .map((name) => caches.delete(name))
       );
-    })
+      // Trim current cache on activation
+      await trimCache(CACHE_NAME);
+    })()
   );
   // Take control of all pages immediately
   self.clients.claim();
@@ -62,9 +165,7 @@ self.addEventListener('fetch', (event) => {
           // Cache successful responses
           if (response.ok) {
             const responseClone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, responseClone);
-            });
+            cacheWithLimit(request, responseClone);
           }
           return response;
         })
@@ -82,12 +183,10 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) {
-        // Return cached and update in background
+        // Return cached and update in background (stale-while-revalidate)
         fetch(request).then((response) => {
           if (response.ok) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, response);
-            });
+            cacheWithLimit(request, response);
           }
         }).catch(() => {});
         return cached;
@@ -97,9 +196,7 @@ self.addEventListener('fetch', (event) => {
       return fetch(request).then((response) => {
         if (response.ok) {
           const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
-          });
+          cacheWithLimit(request, responseClone);
         }
         return response;
       });

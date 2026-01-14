@@ -1,4 +1,10 @@
 ---
+interface Props {
+  title: string;
+  subtitle: string;
+  accent?: boolean;
+}
+
 const { title, subtitle, accent = false } = Astro.props;
 const dotColor = accent ? "bg-accent" : "bg-primary";
 const lineColor = accent ? "bg-accent" : "bg-primary";
