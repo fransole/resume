@@ -337,11 +337,16 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
 
 <script>
   let flipCardsAbortController: AbortController | null = null;
+  let demoTimeouts: ReturnType<typeof setTimeout>[] = [];
 
   function initFlipCards() {
     // Clean up previous event listeners
     flipCardsAbortController?.abort();
     flipCardsAbortController = new AbortController();
+
+    // Clear any existing demo timeouts
+    demoTimeouts.forEach(clearTimeout);
+    demoTimeouts = [];
 
     const cards = document.querySelectorAll('.flip-card');
 
@@ -374,13 +379,15 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
 
       // Demo flip on first card on page load
       if (index === 0) {
-        setTimeout(() => {
+        const timeout1 = setTimeout(() => {
           card.classList.add('demo-flip');
           // Remove demo class after animation completes
-          setTimeout(() => {
+          const timeout2 = setTimeout(() => {
             card.classList.remove('demo-flip');
           }, 1500); // Match animation duration
+          demoTimeouts.push(timeout2);
         }, 500); // Wait 500ms after page load to start demo
+        demoTimeouts.push(timeout1);
       }
     });
   }
@@ -393,6 +400,8 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
 
   // Clean up on navigation
   document.addEventListener('astro:before-swap', () => {
+    demoTimeouts.forEach(clearTimeout);
+    demoTimeouts = [];
     flipCardsAbortController?.abort();
   });
 </script>

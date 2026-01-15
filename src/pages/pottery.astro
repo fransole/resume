@@ -147,7 +147,7 @@ images.sort((a, b) => a.label.localeCompare(b.label));
     // Shared sidebar state management
     function getSidebarCollapsed(): boolean {
       try {
-        return sessionStorage.getItem('sidebar-collapsed') === 'true';
+        return sessionStorage.getItem('pottery-sidebar-collapsed') === 'true';
       } catch {
         return false;
       }
@@ -155,7 +155,7 @@ images.sort((a, b) => a.label.localeCompare(b.label));
 
     function setSidebarCollapsed(collapsed: boolean): void {
       try {
-        sessionStorage.setItem('sidebar-collapsed', collapsed ? 'true' : 'false');
+        sessionStorage.setItem('pottery-sidebar-collapsed', collapsed ? 'true' : 'false');
       } catch {
         // Ignore storage errors (quota exceeded, etc.)
       }
@@ -182,11 +182,11 @@ images.sort((a, b) => a.label.localeCompare(b.label));
       const toggleText = toggleBtn?.querySelector('.toggle-text');
 
       if (collapsed) {
-        drawer.classList.add('sidebar-collapsed');
+        drawer.classList.add('pottery-sidebar-collapsed');
         if (toggleText) toggleText.textContent = 'Show sidebar';
         toggleBtn?.setAttribute('aria-expanded', 'false');
       } else {
-        drawer.classList.remove('sidebar-collapsed');
+        drawer.classList.remove('pottery-sidebar-collapsed');
         if (toggleText) toggleText.textContent = 'Hide sidebar';
         toggleBtn?.setAttribute('aria-expanded', 'true');
       }
@@ -207,7 +207,9 @@ images.sort((a, b) => a.label.localeCompare(b.label));
         await new Promise<void>((resolve) => {
           link.onload = () => resolve();
           link.onerror = () => {
-            console.warn('Fancybox CSS failed to load');
+            if (import.meta.env.DEV) {
+              console.warn('Fancybox CSS failed to load');
+            }
             resolve(); // Continue even if CSS fails - Fancybox still works
           };
         });
@@ -236,7 +238,9 @@ images.sort((a, b) => a.label.localeCompare(b.label));
             }
           });
         } catch (err) {
-          console.warn('Failed to load Fancybox:', err);
+          if (import.meta.env.DEV) {
+            console.warn('Failed to load Fancybox:', err);
+          }
           fancyboxLoadPromise = null; // Reset so user can retry
         }
       })();
@@ -313,7 +317,7 @@ images.sort((a, b) => a.label.localeCompare(b.label));
           }
           return;
         }
-        const isCollapsed = drawer.classList.toggle('sidebar-collapsed');
+        const isCollapsed = drawer.classList.toggle('pottery-sidebar-collapsed');
         setSidebarCollapsed(isCollapsed);
         toggleBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
         const toggleText = toggleBtn.querySelector('.toggle-text');
@@ -325,8 +329,8 @@ images.sort((a, b) => a.label.localeCompare(b.label));
 
     // Initialize only via astro:page-load (fires on initial load + View Transitions)
     document.addEventListener('astro:page-load', () => {
-      // Only run on pottery page
-      if (!window.location.pathname.startsWith('/pottery')) return;
+      // Only run on pottery page (works with any base path)
+      if (!window.location.pathname.includes('/pottery')) return;
       initGalleryClickHandler();
       initSidebarToggle();
     });
@@ -340,23 +344,23 @@ images.sort((a, b) => a.label.localeCompare(b.label));
 
 <style>
   /* Sidebar toggle */
-  :global(.drawer.sidebar-collapsed) {
+  :global(.drawer.pottery-sidebar-collapsed) {
     grid-template-columns: 0 1fr;
   }
 
-  :global(.sidebar-collapsed .drawer-side) {
+  :global(.pottery-sidebar-collapsed .drawer-side) {
     transform: translateX(-100%);
     width: 0;
     opacity: 0;
     overflow: hidden;
   }
 
-  :global(.sidebar-collapsed .drawer-content) {
+  :global(.pottery-sidebar-collapsed .drawer-content) {
     width: 100vw;
     max-width: 100vw;
   }
 
-  :global(.sidebar-collapsed main) {
+  :global(.pottery-sidebar-collapsed main) {
     max-width: 100%;
     width: 100%;
   }
@@ -457,7 +461,7 @@ images.sort((a, b) => a.label.localeCompare(b.label));
       transition: none;
     }
 
-    :global(.sidebar-collapsed .drawer-side) {
+    :global(.pottery-sidebar-collapsed .drawer-side) {
       transition: none;
     }
   }

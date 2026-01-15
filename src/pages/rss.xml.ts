@@ -3,16 +3,16 @@ import type { APIContext } from "astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
 import { getCollection } from "astro:content";
 import createSlug from "../lib/createSlug";
+import { getBaseUrl } from "../lib/getBaseUrl";
 
 export async function GET(_context: APIContext): Promise<Response> {
   try {
     const blog = await getCollection("blog");
-    const rawBase = import.meta.env.BASE_URL;
-    const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+    const base = getBaseUrl();
     return rss({
       title: SITE_TITLE,
       description: SITE_DESCRIPTION,
-      site: import.meta.env.SITE,
+      site: 'https://johndorion.com',
       items: blog.map((post) => ({
         title: post.data.title,
         pubDate: post.data.pubDate,
@@ -21,7 +21,9 @@ export async function GET(_context: APIContext): Promise<Response> {
       })),
     });
   } catch (error) {
-    console.error("Failed to generate RSS feed:", error);
+    if (import.meta.env.DEV) {
+      console.error("Failed to generate RSS feed:", error);
+    }
     return new Response("Failed to generate RSS feed", { status: 500 });
   }
 }

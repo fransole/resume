@@ -3,8 +3,8 @@ import SideBarFooter from "./SideBarFooter.astro";
 import { Image } from "astro:assets";
 import SideBarMenu from "./SideBarMenu.astro";
 import profileImg from "../images/john-dorion.jpg";
-const rawBase = import.meta.env.BASE_URL;
-const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+import { getBaseUrl } from "../lib/getBaseUrl";
+const base = getBaseUrl();
 ---
 
 <div class="drawer-side z-40">
@@ -66,12 +66,6 @@ const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
 <script>
   import { setupAnimationEvents } from '../scripts/logoAnimation';
   setupAnimationEvents();
-
-  declare global {
-    interface Window {
-      __swipeListenerAttached?: boolean;
-    }
-  }
 
   // Add swipe gesture to open/close sidebar on mobile
   function initSwipeGesture() {

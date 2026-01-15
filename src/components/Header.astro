@@ -1,6 +1,6 @@
 ---
-const rawBase = import.meta.env.BASE_URL;
-const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+import { getBaseUrl } from "../lib/getBaseUrl";
+const base = getBaseUrl();
 ---
 <div
   class="sticky lg:hidden top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm"

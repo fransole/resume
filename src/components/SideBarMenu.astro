@@ -1,8 +1,7 @@
 ---
 // Active menu item is determined dynamically via URL in the script below
-// Ensure base always ends with slash for proper path joining
-const rawBase = import.meta.env.BASE_URL;
-const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+import { getBaseUrl } from "../lib/getBaseUrl";
+const base = getBaseUrl();
 ---
 
 <ul class="menu grow shrink menu-md overflow-y-auto" data-base={base}>
@@ -13,12 +12,6 @@ const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
 </ul>
 
 <script>
-declare global {
-  interface Window {
-    __menuListenerAttached?: boolean;
-  }
-}
-
 function updateActiveMenuItem() {
   const activeClass = 'bg-base-300';
   const menu = document.querySelector('.menu');

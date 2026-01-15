@@ -13,8 +13,8 @@ const MAX_CACHE_BYTES = 50 * 1024 * 1024; // 50MB total cache size
 const MAX_SINGLE_ASSET_BYTES = 5 * 1024 * 1024; // 5MB per asset
 const TRIM_DEBOUNCE_COUNT = 10; // Only trim every N cache writes
 
-// Base path for GitHub Pages deployment (update if deploying elsewhere)
-const BASE_PATH = '/resume';
+// Base path for deployment (matches astro.config.mjs base setting)
+const BASE_PATH = '';
 
 // Assets to cache immediately on install
 const PRECACHE_ASSETS = [
@@ -97,7 +97,7 @@ async function trimCache(cacheName) {
         }
       } catch (err) {
         // Continue trimming even if individual delete fails
-        console.warn('Cache trim error for item:', err);
+        // Silent fail - cache trimming is best-effort
       }
     }
   }
@@ -204,7 +204,9 @@ self.addEventListener('fetch', (event) => {
           if (response.ok) {
             cacheWithLimit(request, response);
           }
-        }).catch((err) => console.warn('Background cache update failed:', err));
+        }).catch(() => {
+          // Silent fail - background update is best-effort
+        });
         return cached;
       }
 

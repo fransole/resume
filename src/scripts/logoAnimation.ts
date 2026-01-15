@@ -331,6 +331,11 @@ export function initLogoAnimation(): void {
 }
 
 export function setupAnimationEvents(): void {
+  // Respect user's motion preferences
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return; // Don't run animation at all for users who prefer reduced motion
+  }
+
   // Prevent duplicate listeners on re-initialization
   if (listenersAttached) return;
   listenersAttached = true;

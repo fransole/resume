@@ -3,6 +3,7 @@
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
 import JsonLd from './JsonLd.astro';
+import { getBaseUrl } from '../lib/getBaseUrl';
 
 export interface Props {
 	title: string;
@@ -11,8 +12,7 @@ export interface Props {
 	ogType?: string;
 }
 
-const rawBase = import.meta.env.BASE_URL;
-const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+const base = getBaseUrl();
 
 // Generate OG image path from current URL
 const getOGImagePath = () => {
@@ -46,6 +46,7 @@ const { title, description, image = getOGImagePath(), ogType = 'website' } = Ast
 <meta name="generator" content={Astro.generator} />
 <meta name="theme-color" content="#1F1F28" />
 <link rel="canonical" href={Astro.url} />
+<link rel="sitemap" type="application/xml" href={`${base}sitemap-index.xml`} />
 
 <!-- DNS Prefetch for external domains -->
 <link rel="dns-prefetch" href="https://linkedin.com" />
@@ -85,12 +86,17 @@ const { title, description, image = getOGImagePath(), ogType = 'website' } = Ast
 <JsonLd type="WebSite" />
 
 <!-- Service Worker Registration -->
-<script is:inline define:vars={{ base }}>
-  // Use window flag to prevent duplicate registration attempts with View Transitions
-  if ('serviceWorker' in navigator && !window.__swRegistered) {
-    window.__swRegistered = true;
-    navigator.serviceWorker.register(base + 'sw.js').catch((err) => {
-      console.warn('Service Worker registration failed:', err);
-    });
+<script is:inline define:vars={{ base, isDev: import.meta.env.DEV }}>
+  // Use promise-based flag to prevent duplicate registration attempts with View Transitions
+  if ('serviceWorker' in navigator && !window.__swRegisterPromise) {
+    window.__swRegisterPromise = navigator.serviceWorker
+      .register(base + 'sw.js')
+      .catch((err) => {
+        if (isDev) {
+          console.warn('Service Worker registration failed:', err);
+        }
+        window.__swRegisterPromise = null; // Allow retry on failure
+        return null;
+      });
   }
 </script>

@@ -3,6 +3,7 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import HorizontalCard from "../../../../components/HorizontalCard.astro";
 import { getCollection } from "astro:content";
 import createSlug from "../../../../lib/createSlug";
+import { getBaseUrl } from "../../../../lib/getBaseUrl";
 
 export async function getStaticPaths({ paginate }) {
   const all_posts = await getCollection("blog");
@@ -24,8 +25,7 @@ export async function getStaticPaths({ paginate }) {
 const { page } = Astro.props;
 const params = Astro.params;
 
-const rawBase = import.meta.env.BASE_URL;
-const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+const base = getBaseUrl();
 ---
 
 <BaseLayout title={"Blog - " + params.tag}>
@@ -64,6 +64,7 @@ const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
         <a href={page.url.prev} class="btn btn-ghost my-10 mx-5">
           {" "}
           <svg
+            aria-hidden="true"
             class="h-6 w-6 fill-current md:h-8 md:w-8"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -81,6 +82,7 @@ const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
         <a href={page.url.next} class="btn btn-ghost my-10 mx-5">
           Older Posts{" "}
           <svg
+            aria-hidden="true"
             class="h-6 w-6 fill-current md:h-8 md:w-8"
             xmlns="http://www.w3.org/2000/svg"
             width="24"

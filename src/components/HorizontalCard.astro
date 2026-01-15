@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
+import { getBaseUrl } from "../lib/getBaseUrl";
 
 export interface Props {
   title: string;
@@ -12,11 +13,12 @@ export interface Props {
   target?: "_blank" | "_self";
 }
 
-const rawBase = import.meta.env.BASE_URL;
-const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+const base = getBaseUrl();
 
 const { title, img, desc, url, badge, tags, target = "_blank" } = Astro.props;
-const tagUrl = url.split("/").slice(0, -1).join("/") + "/tag";
+const tagUrl = url.includes('/blog/')
+  ? url.split("/").slice(0, -1).join("/") + "/tag"
+  : `${base}blog/tag`;
 
 // Prepend base URL to string image paths that start with /
 const resolvedImg = typeof img === 'string' && img.startsWith('/')
