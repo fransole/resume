@@ -1,4 +1,6 @@
 ---
+import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+
 export interface Props {
   type: 'WebSite' | 'Person' | 'Article' | 'BreadcrumbList';
   data?: Record<string, unknown>;
@@ -12,17 +14,17 @@ const schemas: Record<string, Record<string, unknown>> = {
   WebSite: {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'John Dorion',
+    name: SITE_TITLE,
     url: siteUrl,
-    description: 'IT Specialist & Security Enthusiast',
+    description: SITE_DESCRIPTION,
   },
   Person: {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'John Dorion',
     url: siteUrl,
-    jobTitle: 'IT Specialist',
-    description: 'IT Specialist with expertise in Linux, security, and system administration.',
+    jobTitle: 'Consulting Engineer & Cybersecurity Enthusiast',
+    description: SITE_DESCRIPTION,
     sameAs: [
       'https://www.linkedin.com/in/john-dorion',
       'https://github.com/fransole'
@@ -51,4 +53,6 @@ const schemas: Record<string, Record<string, unknown>> = {
 const schema = { ...schemas[type], ...data };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+<script type="application/ld+json">
+  {JSON.stringify(schema)}
+</script>

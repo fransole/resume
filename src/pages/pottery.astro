@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
+import { debugWarn } from '../lib/debug';
 
 // Image descriptions for accessibility
 const imageDescriptions: Record<string, string> = {
@@ -164,17 +165,13 @@ images.sort((a, b) => a.label.localeCompare(b.label));
     function applySidebarState(collapsed: boolean): void {
       const drawer = document.querySelector('.drawer');
       if (!drawer) {
-        if (import.meta.env.DEV) {
-          console.warn('applySidebarState: Drawer element not found');
-        }
+        debugWarn('applySidebarState: Drawer element not found');
         return; // Early return if drawer not found
       }
 
       // Verify drawer is still in the DOM
       if (!document.contains(drawer)) {
-        if (import.meta.env.DEV) {
-          console.warn('applySidebarState: Drawer element is detached from DOM');
-        }
+        debugWarn('applySidebarState: Drawer element is detached from DOM');
         return;
       }
 
@@ -207,9 +204,22 @@ images.sort((a, b) => a.label.localeCompare(b.label));
         await new Promise<void>((resolve) => {
           link.onload = () => resolve();
           link.onerror = () => {
-            if (import.meta.env.DEV) {
-              console.warn('Fancybox CSS failed to load');
+            debugWarn('Fancybox CSS failed to load');
+
+            // Show user-facing warning
+            const gallery = document.getElementById('gallery');
+            if (gallery) {
+              const warning = document.createElement('div');
+              warning.className = 'alert alert-warning mb-4';
+              warning.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Gallery lightbox unavailable. Click images to view full-size in new tab.</span>
+              `;
+              gallery.insertAdjacentElement('beforebegin', warning);
             }
+
             resolve(); // Continue even if CSS fails - Fancybox still works
           };
         });
@@ -238,9 +248,7 @@ images.sort((a, b) => a.label.localeCompare(b.label));
             }
           });
         } catch (err) {
-          if (import.meta.env.DEV) {
-            console.warn('Failed to load Fancybox:', err);
-          }
+          debugWarn('Failed to load Fancybox:', err);
           fancyboxLoadPromise = null; // Reset so user can retry
         }
       })();
@@ -294,10 +302,8 @@ images.sort((a, b) => a.label.localeCompare(b.label));
 
       // Early returns before any operations
       if (!drawer || !toggleBtn) {
-        if (import.meta.env.DEV) {
-          if (!drawer) console.warn('initSidebarToggle: Drawer element not found');
-          if (!toggleBtn) console.warn('initSidebarToggle: Toggle button not found');
-        }
+        if (!drawer) debugWarn('initSidebarToggle: Drawer element not found');
+        if (!toggleBtn) debugWarn('initSidebarToggle: Toggle button not found');
         // Still apply saved state if drawer exists (even without toggle button)
         if (drawer) applySidebarState(getSidebarCollapsed());
         return;
@@ -310,11 +316,10 @@ images.sort((a, b) => a.label.localeCompare(b.label));
       sidebarAbortController?.abort();
       sidebarAbortController = new AbortController();
 
+      // Single click: toggle
       toggleBtn.addEventListener('click', () => {
         if (!drawer || !document.contains(drawer)) {
-          if (import.meta.env.DEV) {
-            console.warn('Sidebar toggle click: Drawer not available');
-          }
+          debugWarn('Sidebar toggle click: Drawer not available');
           return;
         }
         const isCollapsed = drawer.classList.toggle('pottery-sidebar-collapsed');
@@ -324,6 +329,13 @@ images.sort((a, b) => a.label.localeCompare(b.label));
         if (toggleText) {
           toggleText.textContent = isCollapsed ? 'Show sidebar' : 'Hide sidebar';
         }
+      }, { signal: sidebarAbortController.signal });
+
+      // Double click: reset to default (expanded)
+      toggleBtn.addEventListener('dblclick', () => {
+        sessionStorage.removeItem('pottery-sidebar-collapsed');
+        applySidebarState(false); // Default state
+        debugWarn('Pottery sidebar state reset to default');
       }, { signal: sidebarAbortController.signal });
     }
 

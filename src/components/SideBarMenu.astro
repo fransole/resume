@@ -26,16 +26,25 @@ function updateActiveMenuItem() {
   const path = window.location.pathname;
   let activeId = 'home';
 
-  // Check paths with base prefix
-  const homeMatch = path === base || path === base + 'index.html' || path === base.slice(0, -1);
-  const resumeMatch = path.startsWith(base + 'resume');
-  const blogMatch = path.startsWith(base + 'blog');
-  const potteryMatch = path.startsWith(base + 'pottery');
+  // Defensive: ensure base is valid string
+  if (typeof base !== 'string' || base.length === 0) {
+    // Fallback to simple matching if base is invalid
+    if (path.includes('/resume')) activeId = 'resume';
+    else if (path.includes('/blog')) activeId = 'blog';
+    else if (path.includes('/pottery')) activeId = 'pottery';
+  } else {
+    // Normal path matching with base
+    const normalizedBase = base.endsWith('/') ? base : base + '/';
+    const homeMatch = path === base || path === normalizedBase || path === base + 'index.html' || path === base.slice(0, -1);
+    const resumeMatch = path.startsWith(normalizedBase + 'resume');
+    const blogMatch = path.startsWith(normalizedBase + 'blog');
+    const potteryMatch = path.startsWith(normalizedBase + 'pottery');
 
-  if (homeMatch && !resumeMatch && !blogMatch && !potteryMatch) activeId = 'home';
-  else if (resumeMatch) activeId = 'resume';
-  else if (blogMatch) activeId = 'blog';
-  else if (potteryMatch) activeId = 'pottery';
+    if (homeMatch && !resumeMatch && !blogMatch && !potteryMatch) activeId = 'home';
+    else if (resumeMatch) activeId = 'resume';
+    else if (blogMatch) activeId = 'blog';
+    else if (potteryMatch) activeId = 'pottery';
+  }
 
   const activeItemElem = document.getElementById(activeId);
   if (activeItemElem) activeItemElem.classList.add(activeClass);

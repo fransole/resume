@@ -20,10 +20,23 @@ const tagUrl = url.includes('/blog/')
   ? url.split("/").slice(0, -1).join("/") + "/tag"
   : `${base}blog/tag`;
 
-// Prepend base URL to string image paths that start with /
-const resolvedImg = typeof img === 'string' && img.startsWith('/')
-  ? base + img.slice(1)
-  : img;
+// Validate and resolve image paths
+const resolvedImg = (() => {
+  if (typeof img !== 'string') return img;
+
+  // Reject dangerous protocols
+  const lowerImg = img.toLowerCase();
+  if (lowerImg.startsWith('javascript:') || lowerImg.startsWith('data:') || lowerImg.startsWith('vbscript:')) {
+    return undefined; // Reject dangerous URLs
+  }
+
+  // Prepend base URL for absolute paths
+  if (img.startsWith('/')) {
+    return base + img.slice(1);
+  }
+
+  return img;
+})();
 ---
 
 <div

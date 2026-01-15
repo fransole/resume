@@ -97,6 +97,7 @@ function createParticleElement(playground: HTMLElement, size: number): SVGSVGEle
   svg.setAttribute('viewBox', '0 0 256 256');
   svg.setAttribute('width', size.toString());
   svg.setAttribute('height', size.toString());
+  svg.setAttribute('aria-hidden', 'true'); // Mark as decorative for screen readers
   svg.classList.add('logo-particle');
 
   const path1 = document.createElementNS(SVG_NAMESPACE, 'path');

@@ -13,7 +13,12 @@ const MAX_CACHE_BYTES = 50 * 1024 * 1024; // 50MB total cache size
 const MAX_SINGLE_ASSET_BYTES = 5 * 1024 * 1024; // 5MB per asset
 const TRIM_DEBOUNCE_COUNT = 10; // Only trim every N cache writes
 
-// Base path for deployment (matches astro.config.mjs base setting)
+/**
+ * Base path for the application.
+ * IMPORTANT: This must match the 'base' setting in astro.config.mjs
+ * Current: '' (root path)
+ * If deploying to subdirectory, update both files.
+ */
 const BASE_PATH = '';
 
 // Assets to cache immediately on install
@@ -32,6 +37,8 @@ let cacheWriteCount = 0;
 
 /**
  * Estimate response size from Content-Length header or blob
+ * @param {Response} response - The Response object to measure
+ * @returns {Promise<number>} Size in bytes
  */
 async function getResponseSize(response) {
   const contentLength = response.headers.get('content-length');
@@ -50,6 +57,8 @@ async function getResponseSize(response) {
 
 /**
  * Calculate total cache size in bytes
+ * @param {string} cacheName - Name of the cache to measure
+ * @returns {Promise<number>} Total size in bytes
  */
 async function getCacheSize(cacheName) {
   const cache = await caches.open(cacheName);
@@ -69,6 +78,8 @@ async function getCacheSize(cacheName) {
 /**
  * Trim cache when over limits
  * Uses FIFO eviction (oldest entries removed first)
+ * @param {string} cacheName - Name of the cache to trim
+ * @returns {Promise<void>}
  */
 async function trimCache(cacheName) {
   const cache = await caches.open(cacheName);
@@ -124,7 +135,11 @@ async function cacheWithLimit(request, response) {
   cacheWriteCount++;
   if (cacheWriteCount >= TRIM_DEBOUNCE_COUNT) {
     cacheWriteCount = 0;
-    trimCache(CACHE_NAME);
+    // Monitor cache trimming for failures
+    trimCache(CACHE_NAME).catch(err => {
+      // Log error but don't break caching
+      console.error('[SW] Cache trim failed:', err);
+    });
   }
 }
 
