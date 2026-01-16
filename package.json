@@ -31,5 +31,8 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
     "wrangler": "^4.56.0"
+  },
+  "overrides": {
+    "undici": "^7.18.2"
   }
 }
