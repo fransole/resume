@@ -23,7 +23,7 @@
             pkgs.nodejs_22
 
             # Package managers
-            pkgs.nodePackages.pnpm
+            pkgs.nodePackages.npm
 
             # Required for sharp (Astro image optimization)
             pkgs.vips
@@ -46,23 +46,24 @@
           shellHook = ''
             echo "Astro development environment loaded"
             echo "Node.js version: $(node --version)"
-            echo "pnpm version: $(pnpm --version)"
+            echo "npm version: $(npm --version)"
 
-            # Set up pnpm to use local node_modules/.bin
+            # Set up npm to use local node_modules/.bin
             export PATH="$PWD/node_modules/.bin:$PATH"
 
             # Install dependencies if package.json exists and node_modules doesn't
             if [ -f package.json ] && [ ! -d node_modules ]; then
               echo ""
               echo "Installing dependencies..."
-              pnpm install
+              npm install
             fi
 
             echo ""
             echo "Commands available:"
-            echo "  pnpm dev     - Start development server"
-            echo "  pnpm build   - Build for production"
-            echo "  pnpm preview - Preview production build"
+            echo "  npm run dev     - Start development server"
+            echo "  npm run build   - Build for production"
+            echo "  npm run preview - Preview production build"
+            echo "  npm run deploy  - Deploy to Cloudflare Pages"
           '';
         };
       }
