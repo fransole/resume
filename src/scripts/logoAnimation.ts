@@ -211,8 +211,16 @@ export function initLogoAnimation(): void {
   let time = 0;
 
   // Try to restore animation state from sessionStorage
-  const savedState = sessionStorage.getItem(ANIMATION_STATE_KEY);
-  const restoredState: AnimationState | null = savedState ? JSON.parse(savedState) : null;
+  let restoredState: AnimationState | null = null;
+  try {
+    const savedState = sessionStorage.getItem(ANIMATION_STATE_KEY);
+    if (savedState) {
+      restoredState = JSON.parse(savedState);
+    }
+  } catch (e) {
+    // Corrupted data - ignore and start fresh
+    restoredState = null;
+  }
 
   // Create or restore particles
   if (restoredState && restoredState.particles.length === particleCount) {
