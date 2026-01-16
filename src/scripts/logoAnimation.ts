@@ -81,6 +81,9 @@ let resumeAnimationCallback: (() => void) | null = null;
 let resizeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 let visibilityAbortController: AbortController | null = null;
 
+// Session storage key for animation state persistence
+const ANIMATION_STATE_KEY = 'logo-animation-state';
+
 function createParticleElement(playground: HTMLElement, size: number): SVGSVGElement {
   const svg = document.createElementNS(SVG_NAMESPACE, 'svg');
   svg.setAttribute('viewBox', '0 0 256 256');
@@ -207,9 +210,45 @@ export function initLogoAnimation(): void {
 
   let time = 0;
 
-  // Create particles
-  for (let i = 0; i < particleCount; i++) {
-    particles.push(createRandomParticle(playground, cachedRect, true, i, particleCount));
+  // Try to restore animation state from sessionStorage
+  const savedState = sessionStorage.getItem(ANIMATION_STATE_KEY);
+  const restoredState: AnimationState | null = savedState ? JSON.parse(savedState) : null;
+
+  // Create or restore particles
+  if (restoredState && restoredState.particles.length === particleCount) {
+    // Restore from saved state
+    time = restoredState.time;
+    for (let i = 0; i < particleCount; i++) {
+      const saved = restoredState.particles[i];
+      const el = createParticleElement(playground, saved.size);
+
+      // Apply saved transform and opacity
+      const heightRatio = saved.y / cachedRect.height;
+      const opacity = saved.baseOpacity * Math.min(1, heightRatio * 1.5);
+      const translateX = saved.x - saved.size / 2;
+      const translateY = saved.y - saved.size / 2;
+      el.style.cssText = `opacity:${opacity};transform:translate(${translateX}px,${translateY}px) rotate(${saved.rotation}deg)`;
+
+      particles.push({
+        el,
+        x: saved.x,
+        y: saved.y,
+        baseX: saved.baseX,
+        size: saved.size,
+        baseOpacity: saved.baseOpacity,
+        riseSpeed: saved.riseSpeed,
+        driftAmplitude: saved.driftAmplitude,
+        driftFrequency: saved.driftFrequency,
+        phase: saved.phase,
+        rotation: saved.rotation,
+        rotationSpeed: saved.rotationSpeed
+      });
+    }
+  } else {
+    // Create fresh particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(createRandomParticle(playground, cachedRect, true, i, particleCount));
+    }
   }
 
   lastFrameTime = performance.now();
@@ -323,6 +362,15 @@ export function setupAnimationEvents(): void {
 }
 
 export function cleanupAnimation(): void {
+  // Save current animation state to sessionStorage for persistence across page transitions
+  if (currentAnimationState) {
+    try {
+      sessionStorage.setItem(ANIMATION_STATE_KEY, JSON.stringify(currentAnimationState));
+    } catch (e) {
+      // Ignore quota exceeded errors
+    }
+  }
+
   // Cancel animation frame
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
@@ -347,8 +395,7 @@ export function cleanupAnimation(): void {
     visibilityAbortController = null;
   }
 
-  // Reset all global state
-  currentAnimationState = null;
+  // Reset DOM-related state (but keep currentAnimationState for persistence)
   cachedRect = null;
   lastFrameTime = 0;
   isAnimationPaused = false;
