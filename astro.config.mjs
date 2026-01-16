@@ -12,7 +12,7 @@ export default defineConfig({
   integrations: [mdx(), sitemap(), tailwind()],
   adapter: cloudflare({
     platformProxy: {
-      enabled: true,
+      enabled: false, // Disabled for NixOS compatibility - workerd doesn't run on NixOS
     },
   }),
 });
