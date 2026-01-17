@@ -3,6 +3,7 @@ import SideBarFooter from "./SideBarFooter.astro";
 import { Image } from "astro:assets";
 import SideBarMenu from "./SideBarMenu.astro";
 import profileImg from "../images/john-dorion.png";
+import darkProfileImg from "../images/dark-dorion.png";
 import { getBaseUrl } from "../lib/getBaseUrl";
 const base = getBaseUrl();
 ---
@@ -15,7 +16,7 @@ const base = getBaseUrl();
       <a href={base}>
         <div class="avatar transition ease-in-out hover:scale-[102%] block m-auto">
           <div class="w-[8.5rem]">
-            <Image class="mask mask-circle" format="webp" quality={80} loading="eager" width={300} height={300} src={profileImg} alt="John Dorion" />
+            <Image id="profile-img" class="mask mask-circle" format="webp" quality={80} loading="eager" width={300} height={300} src={profileImg} alt="John Dorion" data-default-src={profileImg.src} data-hover-src={darkProfileImg.src} />
           </div>
         </div>
       </a>
@@ -66,6 +67,31 @@ const base = getBaseUrl();
 <script>
   import { setupAnimationEvents } from '../scripts/logoAnimation';
   setupAnimationEvents();
+
+  // Profile image hover effect
+  function initProfileImageHover() {
+    const profileImg = document.getElementById('profile-img');
+    if (!profileImg) return;
+
+    const defaultSrc = profileImg.getAttribute('data-default-src');
+    const hoverSrc = profileImg.getAttribute('data-hover-src');
+
+    if (!defaultSrc || !hoverSrc) return;
+
+    profileImg.addEventListener('mouseenter', () => {
+      profileImg.setAttribute('src', hoverSrc);
+    });
+
+    profileImg.addEventListener('mouseleave', () => {
+      profileImg.setAttribute('src', defaultSrc);
+    });
+  }
+
+  // Initialize profile image hover
+  initProfileImageHover();
+
+  // Re-initialize on View Transitions navigation
+  document.addEventListener('astro:page-load', initProfileImageHover);
 
   // Add swipe gesture to open/close sidebar on mobile
   function initSwipeGesture() {
